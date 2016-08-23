@@ -8,6 +8,8 @@ import sqlite3
 import traceback
 import ctypes
 import struct
+import exifread         ## added by Kim ji-hun
+import sys               ## added by Kim Ji-Hun 
 
 from utils.utils import look_for_outlook_dirs, look_for_files, zip_archive, get_csv_writer, get_json_writer, \
     write_to_csv, \
@@ -32,6 +34,7 @@ class _FS(object):
     def _list_named_pipes(self):
         for p in look_for_files('\\\\.\\pipe\\*'):
             yield p
+
 
     def __decode_section_a(self, format_version, content, section_a):
         hash_table = dict()
@@ -360,3 +363,29 @@ class _FS(object):
                 zip_archive(outlook_pst_files, self.output_dir, 'pst', self.logger)
             if len(outlook_ost_files) > 0:
                 zip_archive(outlook_ost_files, self.output_dir, 'ost', self.logger)
+
+
+#####################################################################
+####################Added by Kim Ji Hun##############################
+
+def getinfoExif(pathImage, ImageName):
+    path = open(pathImage, 'rb')
+    tags = exifread.process_file(path)
+    folderPath = os.path.dirname(os.path.realpath(__file__)) + "\ExifInfomation"
+    if not os.path.isdir(folderPath):
+        os.mkdir(folderPath)
+    if tags:
+        #print folderPath +"\\"+ImageName
+        exiffile = open(folderPath +"\\"+ ImageName + ".txt", 'wb')
+        exiffile.write(str(tags))
+        exiffile.write('\n\nImage Path : %s:' %pathImage)
+
+    def _ExifSearch():
+        with open(self.output_dir + '\\' + self.computer_name + '_getExifInformation' + self.rand_ext, 'wb') as output:
+            for(dirname, dir, files) in os.walk(path):
+                for filename in files:
+                    pathImage = os.path.join(path, dirname, filename)
+                    getinfoExif(pathImage, filename)
+
+###############Get exif Informaiton###################################
+######################################################################
