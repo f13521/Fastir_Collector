@@ -79,3 +79,12 @@ class Windows7Files(_FS):
 
     def json_chrome_history(self):
         super(Windows7Files, self)._json_chrome_history(self._chrome_history())
+
+
+#########################Added by Kim Ji-Hun########################
+####################################################################
+    def _getExifSearch(self):
+        super(Windows7Files, self)._ExifSearch()
+
+########################Get information exif##########################
+######################################################################
